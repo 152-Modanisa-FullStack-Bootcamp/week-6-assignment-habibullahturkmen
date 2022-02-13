@@ -7,7 +7,8 @@ import (
 	"testing"
 )
 
-func TestRecordingWinsAndRetrievingThem(t *testing.T) {
+// Test the whole application
+func TestTheWholeApplication(t *testing.T) {
 	// Created new store and service
 	store := NewInMemoryWallet()
 	server := WalletServer{store}

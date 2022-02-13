@@ -22,3 +22,26 @@ Backend service that having the following technical requirements:
 Controller(Handler)->Service->Data(Repository).
 * Test coverage should be at least %85.
 * Free to use any DB(In-Memory(no-db), SQL, NoSQL)
+
+## Solution
+Run server by typing `go run .`
+
+### Run Test
+```
+go test ./...
+go test -v ./...
+```
+
+### Run Test Coverage
+```
+go test -coverprofile=cover.txt ./...
+go tool cover -html=cover.txt -o cover.html
+```
+
+Open `cover.html` file to see coverage report.
+
+### GET
+
+### PUT
+
+### POST
