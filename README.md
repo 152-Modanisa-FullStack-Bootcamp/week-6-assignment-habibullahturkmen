@@ -127,6 +127,6 @@ $ curl -X GET http://localhost:5000/
 server.go 90.06% Statements
 repository.go 100% Statements
 ```
-#### Coverage screenshot
+### Coverage screenshot
 
 <img src="coverage_screenshot.jpg" width="1440" alt="screenshot">
