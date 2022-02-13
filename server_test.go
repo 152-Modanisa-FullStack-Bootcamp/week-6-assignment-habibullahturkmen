@@ -11,10 +11,12 @@ import (
 	"testing"
 )
 
+// Stub for wallet
 type StubWalletStore struct {
 	store map[string]int
 }
 
+// GetUsers Stub
 func (i *StubWalletStore) GetUsers(username string) map[string]int {
 	// returns user and balance
 	m := map[string]int{}
@@ -34,6 +36,7 @@ func (i *StubWalletStore) GetUsers(username string) map[string]int {
 	return i.store
 }
 
+// CreateUser Stub
 func (i *StubWalletStore) CreateUser(username string, initialBalance int) string {
 	for key, _ := range i.store {
 		if strings.ToLower(key) == strings.ToLower(username) {
@@ -44,6 +47,7 @@ func (i *StubWalletStore) CreateUser(username string, initialBalance int) string
 	return "Wallet created for " + username
 }
 
+// UpdateUsers Stub
 func (i *StubWalletStore) UpdateUsers(username string, balance int, minimumValue int) (string, error) {
 	for key, value := range i.store {
 		if strings.ToLower(key) == strings.ToLower(username) {
@@ -57,6 +61,7 @@ func (i *StubWalletStore) UpdateUsers(username string, balance int, minimumValue
 	return "User not found!", nil
 }
 
+// Test for GET request
 func TestGetUsers(t *testing.T) {
 	store := StubWalletStore{
 		map[string]int{
@@ -93,6 +98,7 @@ func TestGetUsers(t *testing.T) {
 	})
 }
 
+// Test for PUT request
 func TestPutUsers(t *testing.T) {
 	store := StubWalletStore{
 		map[string]int{},
@@ -115,6 +121,7 @@ func TestPutUsers(t *testing.T) {
 	}
 }
 
+// Test for POST request
 func TestPostUser(t *testing.T) {
 	store := StubWalletStore{
 		map[string]int{
@@ -137,16 +144,19 @@ func TestPostUser(t *testing.T) {
 
 }
 
+// GET all user wallets
 func newGetWalletsRequest(name string) *http.Request {
 	request, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/%s", name), nil)
 	return request
 }
 
+// Put/Create user wallet
 func newPutWalletRequest(name string) *http.Request {
 	request, _ := http.NewRequest(http.MethodPut, fmt.Sprintf("/%s", name), nil)
 	return request
 }
 
+// POST/Update user wallet
 func newPostWalletRequest(name string, balance int) *http.Request {
 	value := map[string]int{"balance": balance}
 	jsonValue, _ := json.Marshal(value)
@@ -154,13 +164,16 @@ func newPostWalletRequest(name string, balance int) *http.Request {
 	return request
 }
 
+// assert method for response body
 func assertResponseBody(t testing.TB, got, want string) {
 	t.Helper()
+
 	if got != want {
 		t.Errorf("response body is wrong, got %q want %q", got, want)
 	}
 }
 
+// assert method for status request
 func assertStatus(t testing.TB, got, want int) {
 	t.Helper()
 
@@ -169,6 +182,7 @@ func assertStatus(t testing.TB, got, want int) {
 	}
 }
 
+// assert method for creat wallet
 func assertCreateWallet(t testing.TB, store map[string]int, username string) {
 	t.Helper()
 

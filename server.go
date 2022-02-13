@@ -24,8 +24,9 @@ type WalletServer struct {
 	store WalletStore
 }
 
+// Controller method
 func (p *WalletServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	username := strings.TrimPrefix(r.URL.Path, "/")
+	username := strings.TrimPrefix(r.URL.Path, "/") // Get username from url
 
 	if r.Method == http.MethodPut {
 		p.createUserWallet(w, username, initialBalanceAmount)
@@ -56,6 +57,7 @@ func (p *WalletServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// method for getting all wallets or single wallet
 func (p *WalletServer) showAllWallets(w http.ResponseWriter, username string) {
 	balance := p.store.GetUsers(username)
 
@@ -73,12 +75,14 @@ func (p *WalletServer) showAllWallets(w http.ResponseWriter, username string) {
 	w.Write(Json)
 }
 
+// method for creating user wallet
 func (p *WalletServer) createUserWallet(w http.ResponseWriter, username string, initialBalance int) {
 	response := p.store.CreateUser(username, initialBalance)
 	fmt.Println(response)
 	w.WriteHeader(http.StatusAccepted)
 }
 
+// method for updating user wallet
 func (p *WalletServer) updateUserWallet(w http.ResponseWriter, username string, balance int) {
 	response, err := p.store.UpdateUsers(username, balance, minimumBalanceAmount)
 	if err != nil {

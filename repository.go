@@ -13,6 +13,7 @@ type InMemoryWalletStore struct {
 	store map[string]int
 }
 
+// CreateUser method for creating a user wallet
 func (i *InMemoryWalletStore) CreateUser(username string, initialBalance int) string {
 	if len(username) == 0 {
 		return "Enter username!"
@@ -26,6 +27,7 @@ func (i *InMemoryWalletStore) CreateUser(username string, initialBalance int) st
 	return "Wallet created for " + username
 }
 
+// GetUsers method for getting all user wallets or a single user wallet
 func (i *InMemoryWalletStore) GetUsers(username string) map[string]int {
 	// returns user and balance
 	m := map[string]int{}
@@ -45,6 +47,7 @@ func (i *InMemoryWalletStore) GetUsers(username string) map[string]int {
 	return i.store
 }
 
+// UpdateUsers method for updating a user wallet
 func (i *InMemoryWalletStore) UpdateUsers(username string, balance int, minimumValue int) (string, error) {
 	for key, value := range i.store {
 		if strings.ToLower(key) == strings.ToLower(username) {
