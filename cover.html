@@ -57,9 +57,9 @@
 				
 				<option value="file0">week-6-assignment-habibullahturkmen/main.go (0.0%)</option>
 				
-				<option value="file1">week-6-assignment-habibullahturkmen/server.go (83.3%)</option>
+				<option value="file1">week-6-assignment-habibullahturkmen/repository.go (100.0%)</option>
 				
-				<option value="file2">week-6-assignment-habibullahturkmen/walletRepo.go (47.8%)</option>
+				<option value="file2">week-6-assignment-habibullahturkmen/server.go (83.3%)</option>
 				
 				</select>
 			</div>
@@ -88,6 +88,69 @@ func main() <span class="cov0" title="0">{
 		<pre class="file" id="file1" style="display: none">package main
 
 import (
+        "errors"
+        "strings"
+)
+
+func NewInMemoryWallet() *InMemoryWalletStore <span class="cov8" title="1">{
+        return &amp;InMemoryWalletStore{map[string]int{}}
+}</span>
+
+type InMemoryWalletStore struct {
+        store map[string]int
+}
+
+// CreateUser method for creating a user wallet
+func (i *InMemoryWalletStore) CreateUser(username string, initialBalance int) string <span class="cov8" title="1">{
+        if len(username) == 0 </span><span class="cov8" title="1">{
+                return "Enter username!"
+        }</span>
+        <span class="cov8" title="1">for key, _ := range i.store </span><span class="cov8" title="1">{
+                if strings.ToLower(key) == strings.ToLower(username) </span><span class="cov8" title="1">{
+                        return "User already have a wallet!"
+                }</span>
+        }
+        <span class="cov8" title="1">i.store[username] = initialBalance
+        return "Wallet created for " + username</span>
+}
+
+// GetUsers method for getting all user wallets or a single user wallet
+func (i *InMemoryWalletStore) GetUsers(username string) map[string]int <span class="cov8" title="1">{
+        // returns user and balance
+        m := map[string]int{}
+        for key, value := range i.store </span><span class="cov8" title="1">{
+                if strings.ToLower(key) == strings.ToLower(username) </span><span class="cov8" title="1">{
+                        m[key] = value
+                        return m
+                }</span>
+        }
+
+        // returns empty map
+        <span class="cov8" title="1">if len(username) &gt; 0 </span><span class="cov8" title="1">{
+                return m
+        }</span>
+
+        // returns all the wallets
+        <span class="cov8" title="1">return i.store</span>
+}
+
+// UpdateUsers method for updating a user wallet
+func (i *InMemoryWalletStore) UpdateUsers(username string, balance int, minimumValue int) (string, error) <span class="cov8" title="1">{
+        for key, value := range i.store </span><span class="cov8" title="1">{
+                if strings.ToLower(key) == strings.ToLower(username) </span><span class="cov8" title="1">{
+                        if value + balance &lt; minimumValue </span><span class="cov8" title="1">{
+                                return "", errors.New("should not be less than minimum balance amount")
+                        }</span>
+                        <span class="cov8" title="1">i.store[key] = value + balance
+                        return "Wallet updated for " + username, nil</span>
+                }
+        }
+        <span class="cov8" title="1">return "User not found!", nil</span>
+}</pre>
+		
+		<pre class="file" id="file2" style="display: none">package main
+
+import (
         "encoding/json"
         "fmt"
         "io/ioutil"
@@ -111,8 +174,9 @@ type WalletServer struct {
         store WalletStore
 }
 
+// Controller method
 func (p *WalletServer) ServeHTTP(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
-        username := strings.TrimPrefix(r.URL.Path, "/")
+        username := strings.TrimPrefix(r.URL.Path, "/") // Get username from url
 
         if r.Method == http.MethodPut </span><span class="cov8" title="1">{
                 p.createUserWallet(w, username, initialBalanceAmount)
@@ -143,6 +207,7 @@ func (p *WalletServer) ServeHTTP(w http.ResponseWriter, r *http.Request) <span c
 
 }
 
+// method for getting all wallets or single wallet
 func (p *WalletServer) showAllWallets(w http.ResponseWriter, username string) <span class="cov8" title="1">{
         balance := p.store.GetUsers(username)
 
@@ -160,12 +225,14 @@ func (p *WalletServer) showAllWallets(w http.ResponseWriter, username string) <s
         w.Write(Json)</span>
 }
 
+// method for creating user wallet
 func (p *WalletServer) createUserWallet(w http.ResponseWriter, username string, initialBalance int) <span class="cov8" title="1">{
         response := p.store.CreateUser(username, initialBalance)
         fmt.Println(response)
         w.WriteHeader(http.StatusAccepted)
 }</span>
 
+// method for updating user wallet
 func (p *WalletServer) updateUserWallet(w http.ResponseWriter, username string, balance int) <span class="cov8" title="1">{
         response, err := p.store.UpdateUsers(username, balance, minimumBalanceAmount)
         if err != nil </span><span class="cov8" title="1">{
@@ -173,66 +240,6 @@ func (p *WalletServer) updateUserWallet(w http.ResponseWriter, username string, 
         }</span>
         <span class="cov8" title="1">fmt.Println(response)
         w.WriteHeader(http.StatusAccepted)</span>
-}</pre>
-		
-		<pre class="file" id="file2" style="display: none">package main
-
-import (
-        "errors"
-        "strings"
-)
-
-func NewInMemoryWallet() *InMemoryWalletStore <span class="cov8" title="1">{
-        return &amp;InMemoryWalletStore{map[string]int{}}
-}</span>
-
-type InMemoryWalletStore struct {
-        store map[string]int
-}
-
-func (i *InMemoryWalletStore) CreateUser(username string, initialBalance int) string <span class="cov8" title="1">{
-        if len(username) == 0 </span><span class="cov0" title="0">{
-                return "Enter username!"
-        }</span>
-        <span class="cov8" title="1">for key, _ := range i.store </span><span class="cov8" title="1">{
-                if strings.ToLower(key) == strings.ToLower(username) </span><span class="cov0" title="0">{
-                        return "User already have a wallet!"
-                }</span>
-        }
-        <span class="cov8" title="1">i.store[username] = initialBalance
-        return "Wallet created for " + username</span>
-}
-
-func (i *InMemoryWalletStore) GetUsers(username string) map[string]int <span class="cov8" title="1">{
-        // returns user and balance
-        m := map[string]int{}
-        for key, value := range i.store </span><span class="cov8" title="1">{
-                if strings.ToLower(key) == strings.ToLower(username) </span><span class="cov0" title="0">{
-                        m[key] = value
-                        return m
-                }</span>
-        }
-
-        // returns empty map
-        <span class="cov8" title="1">if len(username) &gt; 0 </span><span class="cov0" title="0">{
-                return m
-        }</span>
-
-        // returns all the wallets
-        <span class="cov8" title="1">return i.store</span>
-}
-
-func (i *InMemoryWalletStore) UpdateUsers(username string, balance int, minimumValue int) (string, error) <span class="cov0" title="0">{
-        for key, value := range i.store </span><span class="cov0" title="0">{
-                if strings.ToLower(key) == strings.ToLower(username) </span><span class="cov0" title="0">{
-                        if value + balance &lt; minimumValue </span><span class="cov0" title="0">{
-                                return "", errors.New("should not be less than minimum balance amount")
-                        }</span>
-                        <span class="cov0" title="0">i.store[key] = value + balance
-                        return "Wallet updated for " + username, nil</span>
-                }
-        }
-        <span class="cov0" title="0">return "User not found!", nil</span>
 }</pre>
 		
 		</div>
