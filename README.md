@@ -121,3 +121,12 @@ Return value `Wallet updated for burcu`
 $ curl -X GET http://localhost:5000/
 {"Burcu":-50,"Habib":1000,"Yahya":0}
 ```
+
+### Coverage Results
+```
+server.go 90.06% Statements
+repository.go 100% Statements
+```
+#### Coverage screenshot
+
+<img src="coverage_screenshot.jpg" width="1440" alt="screenshot">
