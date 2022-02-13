@@ -1,28 +1,3 @@
-//package data
-//
-//type IInMemoryWallet interface {
-//	Create(string, int)
-//	Get(string, int) int
-//}
-//
-//type InMemoryWallet struct {
-//	Wallet map[string]int
-//}
-//
-//func (i *InMemoryWallet) Creat(username string, initialBalance int) {
-//	i.Wallet[username] = initialBalance
-//}
-//
-//func (i *InMemoryWallet) Get(username string) int {
-//
-//	return len(i.Wallet)
-//	//return i.Wallet[username]
-//}
-//
-//func NewInMemoryWallet() *InMemoryWallet {
-//	return &InMemoryWallet{map[string]int{}}
-//}
-
 package main
 
 import (
@@ -39,6 +14,9 @@ type InMemoryWalletStore struct {
 }
 
 func (i *InMemoryWalletStore) CreateUser(username string, initialBalance int) string {
+	if len(username) == 0 {
+		return "Enter username!"
+	}
 	for key, _ := range i.store {
 		if strings.ToLower(key) == strings.ToLower(username) {
 			return "User already have a wallet!"

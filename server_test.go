@@ -131,7 +131,6 @@ func TestPostUser(t *testing.T) {
 
 	server.ServeHTTP(response, request)
 	fmt.Println(store)
-	//want := fmt.Sprintf("{\"%s\":%d}", username, balance)
 
 	assertStatus(t, response.Code, http.StatusAccepted)
 	assertResponseBody(t, response.Body.String(), "")
@@ -175,6 +174,5 @@ func assertCreateWallet(t testing.TB, store map[string]int, username string) {
 
 	if _, ok := store[username]; !ok {
 		t.Errorf("store doesn't contain the user, got %v, want %v", ok, username)
-
 	}
 }
