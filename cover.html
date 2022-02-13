@@ -59,7 +59,7 @@
 				
 				<option value="file1">week-6-assignment-habibullahturkmen/repository.go (100.0%)</option>
 				
-				<option value="file2">week-6-assignment-habibullahturkmen/server.go (83.3%)</option>
+				<option value="file2">week-6-assignment-habibullahturkmen/server.go (90.6%)</option>
 				
 				</select>
 			</div>
@@ -185,13 +185,7 @@ func (p *WalletServer) ServeHTTP(w http.ResponseWriter, r *http.Request) <span c
         }</span> else<span class="cov8" title="1"> if r.Method == http.MethodPost </span><span class="cov8" title="1">{
                 b, err := ioutil.ReadAll(r.Body)
 
-                if err != nil </span><span class="cov0" title="0">{
-                        w.WriteHeader(http.StatusInternalServerError)
-                        w.Write([]byte(err.Error()))
-                        return
-                }</span>
-
-                <span class="cov8" title="1">c := make(map[string]int)
+                c := make(map[string]int)
                 err = json.Unmarshal(b, &amp;c)
 
                 if err != nil </span><span class="cov0" title="0">{

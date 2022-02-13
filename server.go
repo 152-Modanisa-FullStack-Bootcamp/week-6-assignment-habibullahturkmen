@@ -35,12 +35,6 @@ func (p *WalletServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodPost {
 		b, err := ioutil.ReadAll(r.Body)
 
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
 		c := make(map[string]int)
 		err = json.Unmarshal(b, &c)
 
