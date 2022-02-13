@@ -52,7 +52,7 @@ func (i *InMemoryWalletStore) UpdateUsers(username string, balance int, minimumV
 	for key, value := range i.store {
 		if strings.ToLower(key) == strings.ToLower(username) {
 			if value + balance < minimumValue {
-				return "", errors.New("should not be less than minimum balance amount")
+				return "", errors.New("amount should not be less than minimum balance amount")
 			}
 			i.store[key] = value + balance
 			return "Wallet updated for " + username, nil
